@@ -1,0 +1,25 @@
+data:
+  n_patients: 200
+  n_notes: 500
+  seed: 42
+
+text_model:
+  test_size: 0.2
+  seed: 42
+  max_features: 5000
+  ngram_range: [1, 2]
+
+timeseries_model:
+  sequence_length: 14
+  hidden_size: 32
+  num_layers: 2
+  epochs: 30
+  batch_size: 32
+  learning_rate: 0.001
+
+fusion_model:
+  hidden_dim: 64
+  dropout: 0.3
+  epochs: 40
+  batch_size: 32
+  learning_rate: 0.001

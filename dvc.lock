@@ -1,0 +1,80 @@
+schema: '2.0'
+stages:
+  generate_data:
+    cmd: python scripts/generate_data.py --n-patients 200 --n-notes 500 --seed 
+      42
+    deps:
+    - path: scripts/generate_data.py
+      hash: md5
+      md5: ea5f460bdbb1f55da7dec90bec99ed30
+      size: 5014
+    params:
+      params.yaml:
+        data.n_notes: 500
+        data.n_patients: 200
+        data.seed: 42
+    outs:
+    - path: data/synthetic/consultation_notes.csv
+      hash: md5
+      md5: a5e9fe0c9352b4ab584f276fc3ae7bfe
+      size: 38195
+    - path: data/synthetic/patients.csv
+      hash: md5
+      md5: 890516ad9588cfc4e23457f6aa8c6d4e
+      size: 8446
+    - path: data/synthetic/vitals_history.csv
+      hash: md5
+      md5: 75de777147349efb3b5087c8171ab26e
+      size: 93424
+  train_text_model:
+    cmd: python scripts/train_text_model.py
+    deps:
+    - path: data/synthetic/consultation_notes.csv
+      hash: md5
+      md5: a5e9fe0c9352b4ab584f276fc3ae7bfe
+      size: 38195
+    - path: scripts/train_text_model.py
+      hash: md5
+      md5: 5e6dfcbf2e3bac27c008f0d95351e9e9
+      size: 3150
+    params:
+      params.yaml:
+        text_model.seed: 42
+        text_model.test_size: 0.2
+    outs:
+    - path: ml_models/text/label_mapping.json
+      hash: md5
+      md5: 576f0e7411357a5fdaf2d2a9c7e698c9
+      size: 172
+    - path: ml_models/text/metrics.json
+      hash: md5
+      md5: e41dc1ca868d9b8cac6908577cf3cd9f
+      size: 64
+    - path: ml_models/text/tfidf_logreg_classifier.pkl
+      hash: md5
+      md5: 5cec1eb58e7516060902fdcba6eea29e
+      size: 14775
+  evaluate:
+    cmd: python scripts/evaluate_models.py
+    deps:
+    - path: ml_models/fusion/best_fusion_model.pth
+      hash: md5
+      md5: 70305c55531e74f0134a1cce9bfb4453
+      size: 93853
+    - path: ml_models/text/tfidf_logreg_classifier.pkl
+      hash: md5
+      md5: 5cec1eb58e7516060902fdcba6eea29e
+      size: 14775
+    - path: ml_models/timeseries/best_lstm.pth
+      hash: md5
+      md5: f30f39828b1b7e7eb680967a846b79fe
+      size: 59361
+    - path: scripts/evaluate_models.py
+      hash: md5
+      md5: 9797cf64eecf915c5aca4defa06469e9
+      size: 2658
+    outs:
+    - path: data/processed/evaluation_report.json
+      hash: md5
+      md5: 96ad9c1cf94950ec0f0f72feba9d1a74
+      size: 680

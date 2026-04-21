@@ -1,0 +1,42 @@
+stages:
+
+  generate_data:
+    cmd: python scripts/generate_data.py --n-patients 200 --n-notes 500 --seed 42
+    deps:
+      - scripts/generate_data.py
+    params:
+      - params.yaml:
+          - data.n_patients
+          - data.n_notes
+          - data.seed
+    outs:
+      - data/synthetic/patients.csv
+      - data/synthetic/vitals_history.csv
+      - data/synthetic/consultation_notes.csv
+
+  train_text_model:
+    cmd: python scripts/train_text_model.py
+    deps:
+      - scripts/train_text_model.py
+      - data/synthetic/consultation_notes.csv
+    params:
+      - params.yaml:
+          - text_model.test_size
+          - text_model.seed
+    outs:
+      - ml_models/text/tfidf_logreg_classifier.pkl
+      - ml_models/text/label_mapping.json
+    metrics:
+      - ml_models/text/metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: python scripts/evaluate_models.py
+    deps:
+      - scripts/evaluate_models.py
+      - ml_models/text/tfidf_logreg_classifier.pkl
+      - ml_models/timeseries/best_lstm.pth
+      - ml_models/fusion/best_fusion_model.pth
+    outs:
+      - data/processed/evaluation_report.json:
+          cache: false
