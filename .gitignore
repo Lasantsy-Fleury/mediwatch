@@ -1,0 +1,35 @@
+# Environnements Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+env/
+
+# Anaconda
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Données sensibles (ne jamais commiter des données patients)
+data/raw/
+data/processed/
+
+# Modèles ML (trop lourds pour Git, on utilisera DVC plus tard)
+ml_models/
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
