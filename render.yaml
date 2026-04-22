@@ -1,0 +1,21 @@
+services:
+
+  - type: web
+    name: mediwatch-backend
+    runtime: python
+    region: frankfurt
+    plan: free
+    buildCommand: |
+      pip install -r requirements_prod.txt &&
+      python scripts/generate_data.py --n-patients 50 --n-notes 200 &&
+      python scripts/train_text_model.py
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: .
+      - key: ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+    healthCheckPath: /health
+    autoDeploy: true

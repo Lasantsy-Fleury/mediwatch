@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mediwatch.local/schemas/grafana-datasource.schema.json",
+  "title": "Grafana Datasource Provisioning",
+  "type": "object",
+  "required": ["apiVersion", "datasources"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "datasources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "access", "url"],
+        "additionalProperties": true,
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "access": {
+            "type": "string",
+            "enum": ["proxy", "direct"]
+          },
+          "url": { "type": "string", "minLength": 1 },
+          "isDefault": { "type": "boolean" },
+          "editable": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

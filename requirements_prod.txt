@@ -3,14 +3,14 @@ fastapi==0.115.0
 uvicorn[standard]==0.30.0
 pydantic==2.8.0
 python-multipart==0.0.9
+python-dotenv==1.0.0
 
-# ML — CPU only (pas de CUDA en prod légère)
+# ML — CPU only
 torch==2.3.0+cpu
 torchvision==0.18.0+cpu
 --extra-index-url https://download.pytorch.org/whl/cpu
 
 # NLP
-transformers==4.44.0
 scikit-learn==1.5.0
 
 # Data
@@ -21,5 +21,10 @@ numpy==1.26.0
 Pillow==10.4.0
 opencv-python-headless==4.10.0.84
 
-# Utilitaires
-python-dotenv==1.0.0
+# Monitoring
+prometheus-fastapi-instrumentator==6.1.0
+prometheus-client==0.20.0
+
+# Sécurité (étape 15)
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4

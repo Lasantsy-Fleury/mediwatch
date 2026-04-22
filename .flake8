@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 100
+exclude =
+    __pycache__,
+    .git,
+    .dvc,
+    frontend/,
+    notebooks/,
+    data/
+ignore =
+    E501,
+    W503,
+    E203,
+    E402
