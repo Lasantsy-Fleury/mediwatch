@@ -1,0 +1,70 @@
+version: "3.9"
+
+services:
+
+  # ─────────────────────────────────────────
+  # Backend FastAPI
+  # ─────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mediwatch-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Monte les modèles ML sans les copier dans l'image
+      # Utile pour mettre à jour les modèles sans rebuild
+      - ./ml_models:/app/ml_models:ro
+    environment:
+      - ENV=production
+      - LOG_LEVEL=info
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - mediwatch-network
+
+  # ─────────────────────────────────────────
+  # Frontend React (servi via Nginx)
+  # ─────────────────────────────────────────
+  frontend:
+    image: nginx:alpine
+    container_name: mediwatch-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - mediwatch-network
+
+  # ─────────────────────────────────────────
+  # Monitoring Evidently AI (dashboard drift)
+  # ─────────────────────────────────────────
+  monitoring:
+    image: python:3.10-slim
+    container_name: mediwatch-monitoring
+    working_dir: /app
+    volumes:
+      - ./scripts:/app/scripts
+      - ./data:/app/data
+      - ./monitoring:/app/monitoring
+    command: >
+      sh -c "pip install evidently --quiet &&
+             python scripts/monitoring_dashboard.py"
+    networks:
+      - mediwatch-network
+    profiles:
+      - monitoring
+
+networks:
+  mediwatch-network:
+    driver: bridge

@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+
+# Données (trop lourdes, pas nécessaires en prod)
+data/
+
+# Notebooks
+notebooks/
+
+# Frontend (servi séparément)
+frontend/
+
+# Scripts ML
+scripts/
+
+# DVC
+.dvc/
+dvc.lock
+*.dvc
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

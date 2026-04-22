@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+:root {
+  --mw-navy: #1e3a5f;
+  --mw-blue: #3b82f6;
+  --mw-green: #10b981;
+  --mw-orange: #f59e0b;
+  --mw-red: #ef4444;
+  --mw-bg: #f6f9fc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #334155;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  background: var(--mw-bg);
+}
+
+#root {
+  min-height: 100vh;
+}
