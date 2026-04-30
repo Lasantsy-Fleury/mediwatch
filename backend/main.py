@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_fastapi_instrumentator import Instrumentator
+
+try:
+    from prometheus_fastapi_instrumentator import Instrumentator
+except ImportError:
+    Instrumentator = None
 
 from api.routes import consultation, patient, simulation
 from utils.metrics import active_patients_gauge, model_loaded_gauge
@@ -33,15 +37,16 @@ app.add_middleware(
 # - nb requêtes par status code
 # - requêtes en cours
 # ─────────────────────────────────────────────────────
-Instrumentator(
-    should_group_status_codes=False,
-    should_ignore_untemplated=True,
-    should_respect_env_var=True,
-    should_instrument_requests_inprogress=True,
-    excluded_handlers=["/metrics", "/health"],
-    inprogress_name="mediwatch_http_requests_inprogress",
-    inprogress_labels=True,
-).instrument(app).expose(app)
+if Instrumentator is not None:
+    Instrumentator(
+        should_group_status_codes=False,
+        should_ignore_untemplated=True,
+        should_respect_env_var=True,
+        should_instrument_requests_inprogress=True,
+        excluded_handlers=["/metrics", "/health"],
+        inprogress_name="mediwatch_http_requests_inprogress",
+        inprogress_labels=True,
+    ).instrument(app).expose(app)
 
 # ─────────────────────────────────────────────────────
 # Routers

@@ -2,7 +2,28 @@
 Métriques Prometheus personnalisées pour MediWatch.
 Ces métriques s'ajoutent aux métriques HTTP automatiques.
 """
-from prometheus_client import Counter, Histogram, Gauge
+try:
+    from prometheus_client import Counter, Histogram, Gauge
+except ImportError:
+    class _NoOpMetric:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def labels(self, *args, **kwargs):
+            return self
+
+        def inc(self, *args, **kwargs):
+            pass
+
+        def observe(self, *args, **kwargs):
+            pass
+
+        def set(self, *args, **kwargs):
+            pass
+
+    Counter = _NoOpMetric
+    Histogram = _NoOpMetric
+    Gauge = _NoOpMetric
 import time
 
 # ─────────────────────────────────────────────────────
