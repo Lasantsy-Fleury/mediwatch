@@ -1,13 +1,13 @@
 # Backend
-fastapi==0.115.0
-uvicorn[standard]==0.30.0
-pydantic==2.8.0
-python-multipart==0.0.9
+fastapi==0.136.0
+uvicorn==0.44.0
+pydantic==2.13.3
+python-multipart==0.0.26
 python-dotenv==1.0.0
 
 # ML — CPU only
-torch==2.3.0+cpu
-torchvision==0.18.0+cpu
+torch==2.11.0+cpu
+torchvision==0.26.0+cpu
 --extra-index-url https://download.pytorch.org/whl/cpu
 
 # NLP
@@ -28,3 +28,7 @@ prometheus-client==0.20.0
 # Sécurité (étape 15)
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+# Database
+SQLAlchemy==1.4.49
+psycopg2-binary==2.9.12
