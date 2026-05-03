@@ -30,13 +30,34 @@ def main():
     category_to_label = {"normal": 0, "cardio": 1, "metabolic": 2, "infectious": 3}
     label_to_category = {v: k for k, v in category_to_label.items()}
     df["label_encoded"] = df["category"].map(category_to_label)
+    df = df.dropna(subset=["label_encoded"]).copy()
+    df["label_encoded"] = df["label_encoded"].astype(int)
+    label_counts = df["label_encoded"].value_counts()
+    if label_counts.empty or len(label_counts) < 2:
+        raise ValueError(
+            "Impossible d'entraîner le modèle : au moins deux classes sont nécessaires."
+        )
 
     # Split
-    X_train, X_test, y_train, y_test = train_test_split(
-        df["note"], df["label_encoded"],
-        test_size=args.test_size, random_state=args.seed,
-        stratify=df["label_encoded"]
-    )
+    stratify_labels = df["label_encoded"] if label_counts.min() >= 2 else None
+    if stratify_labels is None:
+        print("⚠️  Stratification désactivée : certaines classes ont moins de 2 exemples.")
+
+    split_seed = args.seed
+    for attempt in range(5):
+        X_train, X_test, y_train, y_test = train_test_split(
+            df["note"], df["label_encoded"],
+            test_size=args.test_size, random_state=split_seed,
+            stratify=stratify_labels
+        )
+        if len(np.unique(y_train)) >= 2:
+            break
+        stratify_labels = None
+        split_seed += 1
+    else:
+        raise ValueError(
+            "Impossible de créer un jeu d'entraînement avec au moins deux classes."
+        )
 
     # Entraînement
     pipeline = Pipeline([
@@ -55,14 +76,38 @@ def main():
     # Évaluation
     y_pred = pipeline.predict(X_test)
     y_proba = pipeline.predict_proba(X_test)
-    auc = roc_auc_score(y_test, y_proba, multi_class="ovr", average="macro")
-
+    label_order = [category_to_label[key] for key in category_to_label.keys()]
+    target_names = list(category_to_label.keys())
     report = classification_report(
-        y_test, y_pred, target_names=list(category_to_label.keys()), output_dict=True
+        y_test,
+        y_pred,
+        labels=label_order,
+        target_names=target_names,
+        output_dict=True,
+        zero_division=0
     )
+    model_labels = list(pipeline.named_steps["clf"].classes_)
+    unique_test = np.unique(y_test)
+    if len(unique_test) >= 2 and set(unique_test).issubset(set(model_labels)):
+        auc = roc_auc_score(
+            y_test,
+            y_proba,
+            multi_class="ovr",
+            average="macro",
+            labels=model_labels
+        )
+    else:
+        print("⚠️  AUC macro non calculable (classes insuffisantes ou absentes).")
+        auc = 0.0
 
     print("📊 Résultats :")
-    print(classification_report(y_test, y_pred, target_names=list(category_to_label.keys())))
+    print(classification_report(
+        y_test,
+        y_pred,
+        labels=label_order,
+        target_names=target_names,
+        zero_division=0
+    ))
     print(f"AUC macro : {auc:.4f}")
 
     # Sauvegarde modèle
