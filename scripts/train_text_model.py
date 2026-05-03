@@ -67,7 +67,7 @@ def main():
         )),
         ("clf", LogisticRegression(
             max_iter=1000, C=1.0,
-            multi_class="multinomial", solver="lbfgs",
+            solver="lbfgs",
             random_state=args.seed
         ))
     ])
