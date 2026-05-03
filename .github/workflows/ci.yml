@@ -71,7 +71,7 @@ jobs:
 
       - name: Installation des dépendances
         run: |
-          pip install fastapi uvicorn pydantic python-multipart
+          pip install fastapi uvicorn pydantic python-multipart prometheus-fastapi-instrumentator
           pip install scikit-learn pandas numpy pillow
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install pytest pytest-cov pytest-asyncio httpx
