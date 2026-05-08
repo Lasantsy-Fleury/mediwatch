@@ -73,6 +73,7 @@ jobs:
         run: |
           pip install fastapi uvicorn pydantic python-multipart prometheus-fastapi-instrumentator
           pip install scikit-learn pandas numpy pillow
+          pip install python-dotenv
           pip install python-jose[cryptography]
           pip install passlib[bcrypt]
           pip install torch --index-url https://download.pytorch.org/whl/cpu
