@@ -76,6 +76,7 @@ jobs:
           pip install python-dotenv
           pip install python-jose[cryptography]
           pip install passlib[bcrypt]
+          pip install SQLAlchemy
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install pytest pytest-cov pytest-asyncio httpx
 
