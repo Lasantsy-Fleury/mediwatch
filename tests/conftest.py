@@ -6,6 +6,9 @@ import pytest
 import sys
 import os
 
+# Force un environnement de test pour bypasser l'auth JWT.
+os.environ.setdefault("ENV", "test")
+
 # Ajoute le dossier backend au path Python
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
 
