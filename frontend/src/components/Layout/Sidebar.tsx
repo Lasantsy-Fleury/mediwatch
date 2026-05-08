@@ -2,10 +2,10 @@ import { FlaskConical, LayoutDashboard, Stethoscope, UserRound } from 'lucide-re
 import { NavLink } from 'react-router-dom'
 
 const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
   { to: '/consultation', label: 'Consultation', icon: Stethoscope },
-  { to: '/patient/PT-1001', label: 'Patient', icon: UserRound },
-  { to: '/simulation', label: 'Simulation', icon: FlaskConical },
+  { to: '/patient/patient-001', label: 'Dossiers Patients', icon: UserRound },
+  { to: '/simulation', label: 'Simulations Cliniques', icon: FlaskConical },
 ]
 
 const Sidebar = (): JSX.Element => {
@@ -15,7 +15,7 @@ const Sidebar = (): JSX.Element => {
         <div className="flex h-full flex-col px-5 py-6">
           <div className="mb-8">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">MediWatch</p>
-            <h1 className="mt-1 text-2xl font-bold text-[color:#1e3a5f]">Assistant Clinique</h1>
+            <h1 className="mt-1 text-2xl font-bold text-[color:#1e3a5f]">Portail Praticien</h1>
           </div>
 
           <nav className="space-y-2">

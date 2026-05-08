@@ -12,8 +12,8 @@ const styles: Record<RiskLevel, string> = {
 
 const labels: Record<RiskLevel, string> = {
   low: 'Faible',
-  medium: 'Modere',
-  high: 'Eleve',
+  medium: 'Modéré',
+  high: 'Élevé',
 }
 
 const RiskBadge = ({ level }: RiskBadgeProps): JSX.Element => {

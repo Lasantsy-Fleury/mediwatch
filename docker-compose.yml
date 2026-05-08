@@ -13,12 +13,15 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - ./backend:/app/backend
       # Monte les modèles ML sans les copier dans l'image
       # Utile pour mettre à jour les modèles sans rebuild
       - ./ml_models:/app/ml_models:ro
     environment:
+      - PYTHONPATH=/app/backend
       - ENV=production
       - LOG_LEVEL=info
+      - DATABASE_URL=sqlite:////tmp/mediwatch_local.db
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]

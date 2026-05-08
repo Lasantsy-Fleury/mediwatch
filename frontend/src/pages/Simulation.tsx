@@ -42,32 +42,35 @@ const Simulation = (): JSX.Element => {
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-slate-200 bg-white p-5 md:p-6">
-        <h2 className="mb-4 text-xl font-semibold text-[color:#1e3a5f]">Simulation therapeutique</h2>
+        <h2 className="mb-2 text-xl font-semibold text-[color:#1e3a5f]">Simulation Thérapeutique</h2>
+        <p className="mb-6 text-sm text-slate-600">
+          Utilisez notre moteur d'IA pour projeter l'impact potentiel d'une modification de traitement ou d'hygiène de vie sur les indicateurs de santé du patient.
+        </p>
 
-        <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-[220px_1fr_auto] md:items-end">
+        <form onSubmit={handleSubmit} className="grid gap-6 md:grid-cols-[250px_1fr_auto] md:items-end">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Patient</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">Sélection du Patient</label>
             <select
               value={patientId}
               onChange={(event) => setPatientId(event.target.value)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               required
             >
               {patients.map((patient) => (
                 <option key={patient.id} value={patient.id}>
-                  {patient.id} - {patient.name}
+                  {patient.name} (ID: {patient.id})
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Hypothese de traitement</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">Hypothèse Thérapeutique</label>
             <textarea
               value={hypothesis}
               onChange={(event) => setHypothesis(event.target.value)}
-              className="h-24 w-full resize-y rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              placeholder="Ex: Intensifier la prise en charge antihypertensive et augmenter l activite physique quotidienne"
+              className="h-24 w-full resize-none rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="Exemple : Introduction d'un inhibiteur de l'ECA et recommandation de 30 min de marche quotidienne..."
               required
             />
           </div>
@@ -75,10 +78,10 @@ const Simulation = (): JSX.Element => {
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[color:#1e3a5f] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[color:#16304d] disabled:opacity-70"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[color:#1e3a5f] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[color:#16304d] disabled:opacity-70"
           >
             {isLoading ? <Loader2 className="animate-spin" size={16} /> : <FlaskConical size={16} />}
-            Lancer la simulation
+            Lancer l'analyse
           </button>
         </form>
       </section>

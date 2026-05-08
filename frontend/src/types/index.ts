@@ -26,7 +26,7 @@ export interface ConsultationPayload {
   patient_id: string
   note_text: string
   vitals: Vitals
-  image?: string
+  image_base64?: string
 }
 
 export interface ConsultationResult {
@@ -91,14 +91,58 @@ export interface SimulationPayload {
 }
 
 export interface SimulationPoint {
-  day: string
-  risk_index: number
-  systolic: number
-  glucose: number
+  day: number
+  parameter: string
+  predicted_value: number
+  confidence_lower: number
+  confidence_upper: number
 }
 
 export interface SimulationResponse {
   patient_id: string
-  treatment_hypothesis: string
+  treatment_description: string
+  duration_days: number
   trajectory: SimulationPoint[]
+  decompensation_risk: number
+  decompensation_day: number | null
+  narrative: string
+  warnings: string[]
+}
+
+export type UserRole = 'doctor' | 'admin' | 'readonly'
+
+export interface AuthUser {
+  id: string
+  username: string
+  email: string
+  full_name: string
+  role: UserRole
+  is_active: boolean
+}
+
+export interface LoginPayload {
+  username: string
+  password: string
+}
+
+export interface RegisterPayload {
+  username: string
+  email: string
+  full_name: string
+  password: string
+}
+
+export type SocialProvider = 'google' | 'microsoft'
+
+export interface SocialLoginPayload {
+  provider: SocialProvider
+  email: string
+  full_name: string
+}
+
+export interface LoginResponse {
+  access_token: string
+  token_type: string
+  expires_in: number
+  user: AuthUser
 }

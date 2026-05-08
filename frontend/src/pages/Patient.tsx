@@ -22,7 +22,7 @@ const riskBarColor = (value: number): string => {
 }
 
 const Patient = (): JSX.Element => {
-  const { id = 'PT-1001' } = useParams()
+  const { id = 'patient-001' } = useParams()
   const [data, setData] = useState<PatientTimelineResponse | null>(null)
 
   useEffect(() => {
@@ -44,32 +44,32 @@ const Patient = (): JSX.Element => {
         {patient ? (
           <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
             <div>
-              <p className="text-sm uppercase tracking-[0.16em] text-slate-500">Dossier patient</p>
+              <p className="text-sm uppercase tracking-[0.16em] text-slate-500">Profil Patient</p>
               <h2 className="mt-1 text-2xl font-bold text-[color:#1e3a5f]">{patient.name}</h2>
-              <p className="mt-2 text-sm text-slate-600">{patient.age} ans</p>
+              <p className="mt-2 text-sm text-slate-600">{patient.age} ans — Dossier #{id}</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {patient.comorbidities.map((item) => (
-                  <span key={item} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-700">
+                  <span key={item} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
                     {item}
                   </span>
                 ))}
               </div>
             </div>
-            <div className="rounded-lg bg-slate-50 p-4">
-              <p className="mb-2 text-xs uppercase tracking-wide text-slate-500">Traitement actuel</p>
+            <div className="rounded-lg bg-slate-50 p-4 border border-slate-100">
+              <p className="mb-2 text-xs uppercase tracking-wide text-slate-500">Protocole Thérapeutique Actuel</p>
               <p className="text-sm font-medium text-slate-700">{patient.current_treatment}</p>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-slate-600">Chargement du dossier...</p>
+          <p className="text-sm text-slate-600">Chargement des données cliniques...</p>
         )}
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-5 md:p-6">
-        <h3 className="mb-4 text-lg font-semibold text-[color:#1e3a5f]">Timeline clinique</h3>
+        <h3 className="mb-4 text-lg font-semibold text-[color:#1e3a5f]">Historique Clinique</h3>
         <div className="space-y-3">
           {timeline.map((event) => (
-            <article key={event.id} className="rounded-lg border border-slate-200 p-4">
+            <article key={event.id} className="rounded-lg border border-slate-200 p-4 hover:bg-slate-50 transition-colors">
               <div className="mb-2 flex items-center justify-between gap-3">
                 <p className="font-semibold text-slate-700">{event.title}</p>
                 <span className="text-xs text-slate-500">{event.date}</span>
@@ -89,7 +89,7 @@ const Patient = (): JSX.Element => {
 
       <section className="grid gap-5">
         <VitalsChart
-          title="Tension arterielle"
+          title="Tension Artérielle"
           data={series}
           yUnit=" mmHg"
           lines={[
@@ -98,32 +98,32 @@ const Patient = (): JSX.Element => {
           ]}
         />
         <VitalsChart
-          title="Frequence cardiaque"
+          title="Fréquence Cardiaque"
           data={series}
           yUnit=" bpm"
           lines={[{ dataKey: 'heart_rate', name: 'FC', color: '#10b981' }]}
         />
         <VitalsChart
-          title="Poids et glycemie"
+          title="Suivi Métabolique (Poids & Glycémie)"
           data={series}
           lines={[
-            { dataKey: 'weight', name: 'Poids', color: '#f59e0b' },
-            { dataKey: 'glucose', name: 'Glycemie', color: '#ef4444' },
+            { dataKey: 'weight', name: 'Poids (kg)', color: '#f59e0b' },
+            { dataKey: 'glucose', name: 'Glycémie (g/L)', color: '#ef4444' },
           ]}
         />
       </section>
 
       {data ? (
         <section className="rounded-lg border border-slate-200 bg-white p-5 md:p-6">
-          <h3 className="mb-4 text-lg font-semibold text-[color:#1e3a5f]">Score de surveillance</h3>
+          <h3 className="mb-4 text-lg font-semibold text-[color:#1e3a5f]">Indicateurs de Vigilance</h3>
           <div className="grid gap-4 md:grid-cols-3">
             {Object.entries(data.risk_scores).map(([key, value]) => (
               <article key={key} className="rounded-lg border border-slate-200 p-4">
-                <p className="mb-2 text-sm font-semibold capitalize text-slate-700">{key}</p>
+                <p className="mb-2 text-sm font-semibold capitalize text-slate-700">{key.replace('_', ' ')}</p>
                 <div className="h-3 rounded-full bg-slate-100">
-                  <div className={`h-3 rounded-full ${riskBarColor(value)}`} style={{ width: `${value}%` }} />
+                  <div className={`h-3 rounded-full ${riskBarColor(value)} transition-all duration-1000`} style={{ width: `${value}%` }} />
                 </div>
-                <p className="mt-2 text-sm text-slate-600">{value}/100</p>
+                <p className="mt-2 text-sm font-medium text-slate-600">{value} / 100</p>
               </article>
             ))}
           </div>

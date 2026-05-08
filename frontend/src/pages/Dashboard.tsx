@@ -50,14 +50,14 @@ const Dashboard = (): JSX.Element => {
         </article>
         <article className="rounded-lg border border-slate-200 bg-white p-5">
           <p className="mb-2 flex items-center gap-2 text-sm text-slate-500">
-            <ShieldAlert size={16} className="text-[color:#ef4444]" /> Patients a risque
+            <ShieldAlert size={16} className="text-[color:#ef4444]" /> Patients à risque
           </p>
           <p className="text-3xl font-bold text-[color:#1e3a5f]">{stats?.high_risk_patients ?? '--'}</p>
         </article>
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-5 md:p-6">
-        <h3 className="mb-4 text-lg font-semibold text-[color:#1e3a5f]">Consultations par semaine</h3>
+        <h3 className="mb-4 text-lg font-semibold text-[color:#1e3a5f]">Activité hebdomadaire</h3>
         <div className="h-72 w-full">
           <ResponsiveContainer>
             <BarChart data={weeklyData}>
@@ -73,8 +73,8 @@ const Dashboard = (): JSX.Element => {
 
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-[color:#1e3a5f]">Patients recents</h3>
-          <p className="text-sm text-slate-500">Cliquez sur une carte pour ouvrir le dossier</p>
+          <h3 className="text-lg font-semibold text-[color:#1e3a5f]">Patients récents</h3>
+          <p className="text-sm text-slate-500">Sélectionnez une fiche pour consulter le dossier complet</p>
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
           {patients.map((patient) => (

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
+from api.routes import consultation, patient, simulation, auth
 
 from api.routes import consultation, patient, simulation
 from utils.metrics import active_patients_gauge, model_loaded_gauge
@@ -46,9 +47,10 @@ Instrumentator(
 # ─────────────────────────────────────────────────────
 # Routers
 # ─────────────────────────────────────────────────────
+app.include_router(auth.router,         prefix="/api/v1", tags=["Authentification"])
 app.include_router(consultation.router, prefix="/api/v1", tags=["Consultation"])
-app.include_router(patient.router, prefix="/api/v1", tags=["Patient"])
-app.include_router(simulation.router, prefix="/api/v1", tags=["Simulation"])
+app.include_router(patient.router,      prefix="/api/v1", tags=["Patient"])
+app.include_router(simulation.router,   prefix="/api/v1", tags=["Simulation"])
 
 
 # ─────────────────────────────────────────────────────
@@ -56,25 +58,36 @@ app.include_router(simulation.router, prefix="/api/v1", tags=["Simulation"])
 # ─────────────────────────────────────────────────────
 @app.on_event("startup")
 async def startup_event():
-    """Initialise les métriques au démarrage."""
+    """Initialise la base de données et les métriques au démarrage."""
+    from db.session import engine, Base, SessionLocal
+    from db.models import PatientDB, ConsultationDB, UserDB
+    from db.crud import seed_demo_patients
+
+    # Création des tables si elles n'existent pas
+    Base.metadata.create_all(bind=engine)
+    print(" Tables PostgreSQL créées")
+
+    # Injection des données de démo
+    db = SessionLocal()
+    try:
+        seed_demo_patients(db)
+    finally:
+        db.close()
+
+    # Métriques Prometheus
     patients = get_all_patients()
     active_patients_gauge.set(len(patients))
 
-    # Vérifie si le modèle NLP est chargé
-    try:
-        from services.text_service import _load_model
-        loaded = _load_model()
-        model_loaded_gauge.labels(model_name="tfidf_logreg").set(1 if loaded else 0)
-    except Exception:
-        model_loaded_gauge.labels(model_name="tfidf_logreg").set(0)
+    # Le modèle texte est chargé en lazy-loading dans le service.
+    # Évite de bloquer le démarrage API si le modèle local est incomplet.
+    model_loaded_gauge.labels(model_name="tfidf_logreg").set(0)
 
-    print("✅ MediWatch API démarrée")
-    print(f"   Patients en mémoire : {len(patients)}")
+    print(" MediWatch API démarrée")
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    print("🛑 MediWatch API arrêtée")
+    print(" MediWatch API arrêtée")
 
 
 # ─────────────────────────────────────────────────────

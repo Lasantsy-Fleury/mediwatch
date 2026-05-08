@@ -57,7 +57,7 @@ const ConsultationForm = ({ patients, onSubmit, isSubmitting }: ConsultationForm
       patient_id: patientId,
       note_text: noteText,
       vitals,
-      image: imageBase64,
+      image_base64: imageBase64,
     })
   }
 
@@ -65,7 +65,7 @@ const ConsultationForm = ({ patients, onSubmit, isSubmitting }: ConsultationForm
     <form onSubmit={handleSubmit} className="space-y-6 rounded-lg border border-slate-200 bg-white p-5 md:p-6">
       <div>
         <label htmlFor="patientId" className="mb-2 block text-sm font-semibold text-slate-700">
-          Patient (ID)
+          Sélection du Patient
         </label>
         <input
           id="patientId"
@@ -73,7 +73,7 @@ const ConsultationForm = ({ patients, onSubmit, isSubmitting }: ConsultationForm
           value={patientId}
           onChange={(event) => setPatientId(event.target.value)}
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-blue-100 transition focus:border-blue-400 focus:ring"
-          placeholder="Ex: PT-1001"
+          placeholder="Saisissez l'identifiant ou le nom..."
           required
         />
         <datalist id="patients-list">
@@ -87,48 +87,48 @@ const ConsultationForm = ({ patients, onSubmit, isSubmitting }: ConsultationForm
 
       <div>
         <label htmlFor="noteText" className="mb-2 block text-sm font-semibold text-slate-700">
-          Note clinique
+          Observations Cliniques
         </label>
         <textarea
           id="noteText"
           value={noteText}
           onChange={(event) => setNoteText(event.target.value)}
-          className="h-44 w-full resize-y rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-blue-100 transition focus:border-blue-400 focus:ring"
-          placeholder="Saisissez l observation clinique, les symptomes, le contexte et les hypotheses..."
+          className="h-44 w-full resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-blue-100 transition focus:border-blue-400 focus:ring"
+          placeholder="Décrivez les symptômes, le contexte clinique et vos hypothèses diagnostiques..."
           required
         />
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold text-slate-700">Parametres vitaux</h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <h3 className="mb-4 text-sm font-semibold text-slate-700">Paramètres Vitaux</h3>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <label className="text-sm text-slate-600">
-            Systolique
+            Tension Systolique (mmHg)
             <input
               type="number"
               value={vitals.systolic}
               onChange={(event) => updateVital('systolic', event.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500"
               required
             />
           </label>
           <label className="text-sm text-slate-600">
-            Diastolique
+            Tension Diastolique (mmHg)
             <input
               type="number"
               value={vitals.diastolic}
               onChange={(event) => updateVital('diastolic', event.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500"
               required
             />
           </label>
           <label className="text-sm text-slate-600">
-            Frequence cardiaque
+            Fréquence Cardiaque (bpm)
             <input
               type="number"
               value={vitals.heart_rate}
               onChange={(event) => updateVital('heart_rate', event.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500"
               required
             />
           </label>
@@ -139,28 +139,28 @@ const ConsultationForm = ({ patients, onSubmit, isSubmitting }: ConsultationForm
               step="0.1"
               value={vitals.weight}
               onChange={(event) => updateVital('weight', event.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500"
               required
             />
           </label>
           <label className="text-sm text-slate-600">
-            Glycemie (mg/dL)
+            Glycémie (mg/dL)
             <input
               type="number"
               value={vitals.glucose}
               onChange={(event) => updateVital('glucose', event.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500"
               required
             />
           </label>
           <label className="text-sm text-slate-600">
-            Temperature (deg C)
+            Température (°C)
             <input
               type="number"
               step="0.1"
               value={vitals.temperature}
               onChange={(event) => updateVital('temperature', event.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-blue-500"
               required
             />
           </label>
@@ -168,24 +168,26 @@ const ConsultationForm = ({ patients, onSubmit, isSubmitting }: ConsultationForm
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold text-slate-700">Image clinique (optionnelle)</label>
-        <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-          <ImagePlus size={16} />
-          Importer une image
+        <label className="mb-2 block text-sm font-semibold text-slate-700">Documents ou Clichés Cliniques (optionnel)</label>
+        <label className="flex cursor-pointer items-center justify-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-600 transition hover:bg-slate-100">
+          <ImagePlus size={20} className="text-slate-400" />
+          <span>Glisser-déposer ou parcourir les fichiers</span>
           <input type="file" accept="image/*" className="hidden" onChange={onImageChange} />
         </label>
         {previewSrc ? (
-          <img src={previewSrc} alt="Apercu" className="mt-3 h-40 w-full rounded-lg object-cover" />
+          <div className="mt-3 relative inline-block">
+             <img src={previewSrc} alt="Aperçu" className="h-40 w-full rounded-lg object-cover border border-slate-200" />
+          </div>
         ) : null}
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex items-center gap-2 rounded-lg bg-[color:#1e3a5f] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[color:#16304d] disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[color:#1e3a5f] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[color:#16304d] disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : <Send size={16} />}
-        Analyser cette consultation
+        {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
+        Soumettre pour Analyse Intelligente
       </button>
     </form>
   )

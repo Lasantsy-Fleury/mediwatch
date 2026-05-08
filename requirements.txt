@@ -78,7 +78,7 @@ numpy==2.2.6
 opencv-python==4.13.0.92
 overrides==7.7.0
 packaging==26.0
-pandas==2.3.3
+pandas==2.2.0
 pandocfilters==1.5.1
 parso==0.8.6
 pillow==12.1.1
@@ -142,3 +142,8 @@ webcolors==25.10.0
 webencodings==0.5.1
 websocket-client==1.9.0
 widgetsnbextension==4.0.15
+prometheus-fastapi-instrumentator==7.1.0
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
+bcrypt==5.0.0
+psycopg2-binary==2.9.12

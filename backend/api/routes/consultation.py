@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
+from utils.auth import get_current_active_doctor
 from models.consultation import ConsultationCreate, VitalSigns
 from models.response import APIResponse
-from services.text_service import analyze_consultation_text
+from services.distilbert_service import analyze_with_distilbert as analyze_consultation_text
 from services.timeseries_service import analyze_vitals
 from services.image_service import analyze_image
 from services.fusion_service import fuse_analysis
@@ -18,7 +19,8 @@ router = APIRouter()
     "/consultation",
     response_model=APIResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Analyser une nouvelle consultation"
+    summary="Analyser une nouvelle consultation",
+    dependencies=[Depends(get_current_active_doctor)]  # ← protection JWT
 )
 async def create_consultation(consultation: ConsultationCreate):
     """
