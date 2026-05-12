@@ -3,6 +3,7 @@ services:
   - type: web
     name: mediwatch-backend
     runtime: python
+    pythonVersion: "3.12.3"
     region: frankfurt
     plan: free
     buildCommand: |
